@@ -5,6 +5,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 from torchvision.datasets import MNIST
+from torchvision.ops import MLP
 from torchvision import transforms
 from tqdm import tqdm
 import wandb
@@ -24,6 +25,14 @@ class Linear(nn.Module):
         super(Linear, self).__init__()
         self.model = nn.Linear(784, 10)
             
+    def forward(self, x): return self.model(x.view(-1, 784))
+
+class MnistMLP(nn.Module):
+
+    def __init__(self, args):
+        super(MnistMLP, self).__init__()
+        self.model = MLP(in_channels=784, hidden_channels=[32, 32, 10])
+    
     def forward(self, x): return self.model(x.view(-1, 784))
         
 
@@ -132,15 +141,13 @@ def mnist_task(args):
         "loss/te": losses_te,
         "acc/te": accs_te}
 
-
-
-
-
 def get_model(args):
     if args.arch == "x2":
         return X2()
     elif args.arch == "linear":
         return Linear()
+    elif args.arch == "mlp":
+        return MnistMLP(args)
     else:
         raise NotImplementedError()
 
@@ -168,6 +175,11 @@ def wrap_optimizer(model, args):
             rho=args.rho,
             lr=args.lr,
             adaptive=True)
+    elif args.opt == "sam_no_norm_division":
+        return SAM(model.parameters(), get_base_optimizer,
+            rho=args.rho,
+            lr=args.lr,
+            adaptive=True)
     else:
         raise NotImplementedError()
 
@@ -185,7 +197,7 @@ def get_args():
         help="Rho in SAM and derivatives")
     P.add_argument("--iterations", type=float, default=1000,
         help="Number of gradient steps")
-    P.add_argument("--arch", default="x2", choices=["x2", "linear"],
+    P.add_argument("--arch", default="x2", choices=["x2", "linear", "mlp"],
         help="WandB usage")
     P.add_argument("--nesterov", dest="nesterov", action="store_true",
         help="Use Nesterov momenetum with inner optimizer")

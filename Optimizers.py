@@ -1,6 +1,19 @@
 import torch
 from torch.optim import SGD
 
+class HistorSAMV1(torch.optim.Optimizer):
+
+    def __init__(self, params, base_optimizer, rho=.05, adaptive=False, **kwargs):
+        self.adaptive = adaptive
+        self.method=method
+
+        defaults = dict(rho=rho, adaptive=adaptive, **kwargs)
+        super(HistorSAMV1, self).__init__(params, defaults)
+
+        self.base_optimizer = base_optimizer(self.param_groups, **kwargs)
+        self.param_groups = self.base_optimizer.param_groups
+        self.defaults.update(self.base_optimizer.defaults)
+
 class SAM(torch.optim.Optimizer):
     def __init__(self, params, base_optimizer, rho=0.05, adaptive=False, method=1, **kwargs):
         assert rho >= 0.0, f"Invalid rho, should be non-negative: {rho}"
