@@ -199,7 +199,7 @@ def get_args():
         help="Number of gradient steps")
     P.add_argument("--arch", default="x2", choices=["x2", "linear", "mlp"],
         help="WandB usage")
-    P.add_argument("--nesterov", dest="nesterov", action="store_true",
+    P.add_argument("--nesterov", default=0, type=int, choices=[0, 1],
         help="Use Nesterov momenetum with inner optimizer")
     P.add_argument("--mm", type=float, default=0,
         help="Inner optimizer momentum")
