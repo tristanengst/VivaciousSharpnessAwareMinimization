@@ -5,7 +5,7 @@ import numpy as np
 import random
 import torch
 import torch.nn as nn
-from torch.optim.lr_scheduler import CosineAnnealingLR, MultiplicativeLR 
+from torch.optim.lr_scheduler import CosineAnnealingLR, MultiplicativeLR
 from torch.utils.data import DataLoader
 from torchvision.datasets import MNIST, CIFAR10
 from torchvision.ops import MLP
@@ -23,11 +23,11 @@ def get_name(args):
     return f"{args.task}-arch{args.arch}-lr{args.lr}-rho{args.rho}-{args.uid}{suffix}"
 
 class Linear(nn.Module):
-    
+
     def __init__(self):
         super(Linear, self).__init__()
         self.model = nn.Linear(784, 10)
-            
+
     def forward(self, x): return self.model(x.view(-1, 784))
 
 class MnistMLP(nn.Module):
@@ -38,23 +38,23 @@ class MnistMLP(nn.Module):
             self.model = MLP(in_channels=784, hidden_channels=[32, 32, 10])
         elif args.arch == "big_mlp":
             self.model = MLP(in_channels=784, hidden_channels=[128, 128, 128, 128, 10])
-    
+
     def forward(self, x): return self.model(x.view(-1, 784))
-        
+
 
 class X2(nn.Module):
 
     def __init__(self):
         super(X2, self).__init__()
         self.x = nn.Parameter(torch.tensor(5000, dtype=torch.float32))
-    
+
     def forward(self): return self.x ** 2
 
 def x2_task(args):
     """Returns a list where the ith element is the loss on the ith iteration."""
     model = X2().to(device)
     optimizer = wrap_optimizer(model, args)
-    
+
     losses = []
     wandb_log_iter = max(1, args.iterations // 1500)
     for idx in tqdm(range(args.iterations)):
@@ -76,9 +76,9 @@ def x2_task(args):
             wandb.log({"loss/tr": detached_loss, "iteration": idx})
         if idx % args.eval_iter == 0 or idx == args.iterations - 1:
             tqdm.write(f"\tStep {idx+1:10}/{args.iterations} - loss/tr={losses[-1]:.5e}")
-        
+
     return {"loss/tr": [l.item() for l in losses]}
-    
+
 
 def mnist_task(args):
 
@@ -110,7 +110,7 @@ def mnist_task(args):
     else:
         raise ValueError(f"Number of iterations {args.iterations} should be evenly divided by the DataLoader length {len(loader_tr)}")
 
-    
+
     loader = chain(*[loader_tr] * num_passes_over_loader)
 
     losses_tr, losses_te, accs_te = [], [], []
@@ -194,7 +194,7 @@ def cifar10_task(args):
 
     scheduler = get_scheduler(optimizer, args)
 
-    
+
     loader = chain(*[loader_tr] * num_passes_over_loader)
 
     losses_tr, losses_te, accs_te = [], [], []
@@ -292,7 +292,7 @@ def get_scheduler(optimizer, args):
         return CosineAnnealingLR(optimizer, args.iterations)
     else:
         raise NotImplementedError()
-    
+
 
 def get_args():
     P = argparse.ArgumentParser()
@@ -320,7 +320,7 @@ def get_args():
         help="Optional suffix")
     P.add_argument("--bs", type=int, default=300,
         help="Batch size")
-    P.add_argument("--num_workers", type=int, default=20,
+    P.add_argument("--num_workers", type=int, default=14,
         help="Number of workers")
     P.add_argument("--eval_iter", type=int, default=100,
         help="Number of gradient steps between validations")
@@ -341,7 +341,7 @@ if __name__ == "__main__":
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
     random.seed(args.seed)
-    
+
     tqdm.write(str(args))
     run = wandb.init(project="ImprovedSAM",
         anonymous="allow",
@@ -364,7 +364,3 @@ if __name__ == "__main__":
         loss_te = result["loss/te"][-1]
         acc_te = result["acc/te"][-1]
         tqdm.write(f"loss/tr={loss_tr} | loss/te={loss_te} | acc/te={acc_te}")
-
-
-    
-    

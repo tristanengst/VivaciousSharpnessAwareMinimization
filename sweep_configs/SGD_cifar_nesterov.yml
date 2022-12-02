@@ -1,0 +1,37 @@
+name: sgd_cifar_nesterov
+program: Train.py
+project: ImprovedSAM
+method: bayes
+metric:
+  name: acc/te
+  goal: maximize
+early_terminate:
+  type: hyperband
+  min_iter: 3
+parameters:
+  wandb:
+    value: online
+  task:
+    value: cifar10
+  arch:
+    value: resnet18
+  opt:
+    value: sgd
+  lr:
+    distribution: log_uniform_values
+    min: 0.00001
+    max: 0.1
+  nesterov:
+    value: 1
+  mm:
+    value: 0.9
+  rho:
+    value: 0
+  scheduler:
+    value: cosine
+  bs:
+    value: 100
+  iterations:
+    value: 50000
+  eval_iter:
+    value: 1000
