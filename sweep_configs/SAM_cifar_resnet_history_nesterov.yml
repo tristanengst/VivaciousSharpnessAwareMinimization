@@ -1,0 +1,42 @@
+name: SAM_cifar_resnet_history_nesterov
+program: Train.py
+project: ImprovedSAM
+method: bayes
+metric:
+  name: acc/te
+  goal: maximize
+parameters:
+  wandb:
+    value: online
+  task:
+    value: cifar10
+  arch:
+    value: resnet18
+  opt:
+    value: sam_rho_mm_v1
+  gamma:
+    distribution: uniform
+    min: 0.0
+    max: 0.999
+  lr:
+    distribution: log_uniform_values
+    min: 0.0001
+    max: 1.0
+  nesterov:
+    value: 1
+  mm:
+    distribution: uniform
+    min: 0.0
+    max: 0.999
+  rho:
+    distribution: log_uniform_values
+    min: 0.0001
+    max: 1.0
+  scheduler:
+    value: cosine
+  bs:
+    value: 100
+  iterations:
+    500000
+  eval_iter:
+    1000

@@ -2,3 +2,4 @@
 __pycache__
 *wandb*
 .ipynb_checkpoints/
+*cifar10*

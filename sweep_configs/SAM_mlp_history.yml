@@ -1,0 +1,28 @@
+name: sam_mlp_plain
+program: Train.py
+project: ImprovedSAM
+method: bayes
+metric:
+  name: acc/te
+  goal: maximize
+parameters:
+  wandb:
+    value: online
+  task:
+    value: mnist
+  arch:
+    value: mlp
+  opt:
+    value: sam
+  lr:
+    distribution: log_uniform_values
+    min: 0.00001
+    max: 1.0
+  nesterov:
+    value: 0
+  mm:
+    value: 0
+  rho:
+    distribution: log_uniform_values
+    min: 0.000001
+    max: 1.0

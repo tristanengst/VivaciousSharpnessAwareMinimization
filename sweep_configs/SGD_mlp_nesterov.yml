@@ -1,0 +1,28 @@
+name: sgd_mlp_nesterov
+program: Train.py
+project: ImprovedSAM
+method: bayes
+metric:
+  name: acc/te
+  goal: maximize
+parameters:
+  wandb:
+    value: online
+  task:
+    value: mnist
+  arch:
+    value: mlp
+  opt:
+    value: sam_rho_mm_v1
+  lr:
+    distribution: log_uniform_values
+    min: 0.00001
+    max: 1.0
+  nesterov:
+    value: 1
+  mm:
+    distribution: uniform
+    min: 0.0
+    max: 0.999
+  rho:
+    value: 0
