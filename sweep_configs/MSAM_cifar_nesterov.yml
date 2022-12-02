@@ -1,4 +1,4 @@
-name: sgd_cifar_nesterov
+name: msam_cifar_nesterov
 program: Train.py
 project: ImprovedSAM
 method: bayes

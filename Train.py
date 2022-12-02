@@ -57,7 +57,8 @@ def x2_task(args):
 
     losses = []
     wandb_log_iter = max(1, args.iterations // 1500)
-    for idx in tqdm(range(args.iterations)):
+    for idx in tqdm(range(args.iterations),
+        dynamic_ncols=True):
 
         def closure():
             model.zero_grad(set_to_none=True)
@@ -116,7 +117,8 @@ def mnist_task(args):
     losses_tr, losses_te, accs_te = [], [], []
     wandb_log_iter = max(1, args.iterations // 1500)
     for idx,(x,y) in tqdm(enumerate(loader),
-        total=len(loader_tr) * num_passes_over_loader):
+        total=len(loader_tr) * num_passes_over_loader,
+        dynamic_ncols=True):
 
         x = x.to(device, non_blocking=True)
         y = y.to(device, non_blocking=True)
@@ -200,7 +202,8 @@ def cifar10_task(args):
     losses_tr, losses_te, accs_te = [], [], []
     wandb_log_iter = max(1, args.iterations // 1500)
     for idx,(x,y) in tqdm(enumerate(loader),
-        total=len(loader_tr) * num_passes_over_loader):
+        total=len(loader_tr) * num_passes_over_loader,
+        dynamic_ncols=True):
 
         x = x.to(device, non_blocking=True)
         y = y.to(device, non_blocking=True)
