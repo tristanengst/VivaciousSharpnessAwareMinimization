@@ -20,7 +20,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def get_name(args):
     suffix = f"-{arg.suffix}" if not args.suffix is None else ""
-    return f"{args.task}-arch{args.arch}-lr{args.lr}-rho{args.rho}-{args.uid}{suffix}"
+    return f"{args.task}-arch{args.arch}-adapt{args.adaptive}-gamma{args.gamma}-lr{args.lr}-rho{args.rho}-{args.uid}{suffix}"
 
 class Linear(nn.Module):
 
@@ -276,8 +276,8 @@ def wrap_optimizer(model, args):
             lr=args.lr,
             method=4,
             adaptive=args.adaptive)
-    elif args.opt == "sam_rho_mm_v1":
-        return HistorSAMV1(model.parameters(), get_base_optimizer,
+    elif args.opt == "msam":
+        return MSAM(model.parameters(), get_base_optimizer,
             rho=args.rho,
             lr=args.lr,
             gamma=args.gamma,

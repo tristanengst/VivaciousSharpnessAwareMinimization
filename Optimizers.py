@@ -1,14 +1,14 @@
 import torch
 from torch.optim import SGD
 
-class HistorSAMV1(torch.optim.Optimizer):
+class MSAM(torch.optim.Optimizer):
 
     def __init__(self, params, base_optimizer, rho=.05, gamma=.1, adaptive=False, **kwargs):
         self.adaptive = adaptive
         self.gamma = gamma
 
         defaults = dict(rho=rho, adaptive=adaptive, gamma=gamma, **kwargs)
-        super(HistorSAMV1, self).__init__(params, defaults)
+        super(MSAM, self).__init__(params, defaults)
 
         self.base_optimizer = base_optimizer(self.param_groups, **kwargs)
         self.param_groups = self.base_optimizer.param_groups
