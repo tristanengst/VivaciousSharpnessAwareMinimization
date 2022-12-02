@@ -5,6 +5,7 @@ Sharpness-aware minimization fails to converge in the simple convex case. Can we
 # Requirements
 ```
 conda create -n py310MSAM python=3.10 -y
+conda activate py310MSAM
 conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
 conda install -c conda-forge tqdm wandb
 ```
