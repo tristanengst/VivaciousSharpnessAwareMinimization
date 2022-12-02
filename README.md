@@ -6,8 +6,8 @@ Sharpness-aware minimization fails to converge in the simple convex case. Can we
 ```
 conda create -n py310MSAM python=3.10 -y
 conda activate py310MSAM
-conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
-conda install -c conda-forge tqdm wandb
+conda install -y pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia -y
+conda install -y -c conda-forge tqdm wandb
 ```
 
 ## SAM convergence test on a simple convex function
